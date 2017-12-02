@@ -1,0 +1,47 @@
+.alert {
+  &--notify {
+    position: relative;
+
+    display: flex;
+  }
+
+  &__icon {
+    display: flex;
+
+    align-items: center;
+
+    min-width: 40px;
+    min-height: 33px;
+
+    margin-right: 12px;
+
+    font-size: 40px;
+  }
+
+  &__text {
+    color: #303133;
+    font-weight: 300;
+  }
+
+  &__info {
+    top: 5px;
+    right: 5px;
+  }
+
+  &--transparent {
+    background-color: transparent !important;
+  }
+
+  &--size-s {
+    padding: 10px 15px;
+  }
+
+  &--size-m {
+    padding: 18px 18px;
+  }
+
+  &--silver {
+    background-color: #f6f6f6;
+    border-color: #ebebeb;
+  }
+}

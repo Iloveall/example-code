@@ -1,0 +1,83 @@
+<div class="dashboard-card dashboard-card--xs card card--shadow">
+    <div class="dashboard-card__header">
+        <span class="dashboard-card__left-icon dashboard-card__left-icon--orange icon-dWaiting"></span>
+        <div class="dashboard-card__right-caption scroll-fix--none flex flex--c jus-cnt  hgt--min40">
+            <div class="dashboard-card__title">Ожидаемые</div>
+            <div class="dashboard-card__count" ng-if="vm.orders.page.totalElements">
+                {{ vm.orders.page.totalElements }} шт.
+            </div>
+
+            <a class="dashboard-card__hover-caption font--size13" ui-sref="cabinet.expectedParcels.list">
+                Подробнее
+                <span class="icon-double-arrow font--size7 mrg--l4 pdd--t2"></span>
+            </a>
+        </div>
+    </div>
+
+    <div class="dashboard-card__content pdd">
+        <div class="dashboard-card__list">
+            <div class="dashboard-card__column text-dots"
+                 ng-repeat="item in vm.orders.data"
+                 uib-tooltip="{{ item.trackingNumber }}"
+                 tooltip-class="tooltip--info tooltip--flex-width tooltip--line tooltip--line-blue"
+                  tooltip-popup-delay="{{ 600 }}"
+                 tooltip-placement="bottom">
+                <div class="mb-checkbox flex  align--cn">
+                    <input class="mb-checkbox__input"
+                           id="checkbox-{{ item.systemNumber }}"
+                           type="checkbox"
+                           ng-checked="vm.selected === item"
+                           ng-click="vm.change(item)">
+                    <label for="checkbox-{{ item.systemNumber }}">
+                        <div class="mb-checkbox__body">
+                          <span class="checked">
+                            <img class="checked__svg" src="images/svg/checked--white.svg"/>
+                          </span>
+                        </div>
+                    </label>
+                </div>
+                <div class="dashboard-card__content-icon"
+                     ng-class="{
+                         'icon-dWaiting color--m-yellow': item.trackingStatus !== 'AT_WAREHOUSE',
+                         'icon-check_bold color--green': item.trackingStatus === 'AT_WAREHOUSE'
+                     }"></div>
+                <div class="dashboard-card__content-title">{{ item.trackingNumber }}</div>
+
+                <a class="dashboard-card__hover-item font--size13" ui-sref="cabinet.expectedParcels.show({id: item.id})">
+                    Подробнее
+                    <span class="icon-double-arrow font--size7 mrg--l4 pdd--t2"></span>
+                </a>
+            </div>
+        </div>
+
+        <spinner ng-if="vm.orders.isLoading"></spinner>
+
+        <div class="dashboard-card__column mrg--auto pdd"
+             ng-if="!vm.orders.data.length && !vm.orders.isFirstLoaded && !vm.orders.isLoading">
+            <span class="dashboard-card__notific">
+                Список ожидаемых посылок для отслеживания и страховки
+            </span>
+        </div>
+    </div>
+
+    <div class="dashboard-card__footer">
+        <button class="button button--line button--orange"
+                type="button"
+                ng-if="!vm.selected"
+                ui-sref="cabinet.expectedParcels.list({addParcel: true})">
+            Добавить посылку
+        </button>
+        <button class="button button--line button--orange"
+                type="button"
+                ng-if="vm.selected && (!vm.insure.model || vm.insure.model.status.id !== 700) && !vm.selected.atWarehouse"
+                ng-click="vm.setInsureById(vm.selected.id)">
+            Застраховать
+        </button>
+        <button class="button button--line button--orange"
+                type="button"
+                ng-if="vm.selected && (vm.insure.model && vm.insure.model.status.id === 700) || vm.selected.atWarehouse"
+                ui-sref="cabinet.expectedParcels.list({searchNumber: vm.selected.trackingNumber})">
+            Отследить
+        </button>
+    </div>
+</div>
